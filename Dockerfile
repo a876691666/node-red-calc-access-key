@@ -1,8 +1,6 @@
-FROM node:12
+FROM node:12-slim
 
 WORKDIR /
-
-RUN npm install
 
 COPY . .
 

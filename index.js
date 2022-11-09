@@ -1,4 +1,4 @@
-const libsodium = require('libsodium-wrappers');
+const libsodium = require('./libsodium-wrappers');
 const http = require('http')
 
 let server = http.createServer();
