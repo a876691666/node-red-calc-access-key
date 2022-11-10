@@ -11,7 +11,8 @@ const router = new Router();
 router
   .get('/get', async (ctx, next) => {
     const { email, password } = ctx.query;
-    ctx.body = await calcAccessKey(email, password);
+    const key = await calcAccessKey(email, password);
+    ctx.body = JSON.stringify({ key });
   });
 
 router
