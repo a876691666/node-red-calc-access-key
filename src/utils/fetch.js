@@ -34,8 +34,14 @@ function getImage({ accessToken, input, seed }) {
         "authorization": "Bearer " + accessToken,
       },
     }, (err, res, body) => {
-      const binary = Buffer.from(body.slice(27), 'base64');
-      resolve(binary);
+      if (body.slice) {
+
+        const binary = Buffer.from(body.slice(27), 'base64');
+        resolve(binary);
+      } else {
+        console.log(body);
+        resolve(body);
+      }
     });
   });
 }
