@@ -18,7 +18,6 @@ function getImage({ accessToken, input, seed }) {
         uc: "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
       },
     });
-    console.log('fetch');
     request.post("https://api.novelai.net/ai/generate-image", {
       body: body,
       family: 6, // 重要，ipv4服务器非常慢
@@ -34,13 +33,8 @@ function getImage({ accessToken, input, seed }) {
         "authorization": "Bearer " + accessToken,
       },
     }, (err, res, body) => {
-      if (body.slice) {
-
-        const binary = Buffer.from(body.slice(27), 'base64');
-        resolve(binary);
-      } else {
-        console.log(body);
-        resolve(body);
+      if (body && body.slice) {
+        resolve(Buffer.from(body.slice(27), 'base64').toString('binary'));
       }
     });
   });
