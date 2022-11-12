@@ -31,6 +31,7 @@ const init = () => {
 
 const update = () => {
   fs.writeFileSync(getStoragePath("task.db"), storage.map(item => JSON.stringify(item)).join('\n'));
+  start();
 }
 
 const add = (id, input, planNum = 500) => {
@@ -79,10 +80,6 @@ const next = async () => {
 
     update();
     next();
-  } else {
-    setTimeout(() => {
-      next();
-    }, 1000);
   }
 }
 
