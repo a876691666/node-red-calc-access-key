@@ -109,6 +109,14 @@ const getImage = (id, name) => {
   return null;
 }
 
+const removeImage = (id, name) => {
+  const path = getStoragePath(`${id}/${name}`);
+  const check = fs.existsSync(path);
+  if (check) {
+    fs.unlinkSync(path);
+  }
+}
+
 module.exports = {
   init,
   update,
@@ -119,5 +127,6 @@ module.exports = {
   remove,
   getChildNames,
   getImage,
+  removeImage,
   storage,
 }

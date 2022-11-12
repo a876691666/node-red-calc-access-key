@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const { add, getAll, get, getChildNames, getImage } = require('../../service/photoManager');
+const { add, getAll, get, getChildNames, getImage, removeImage } = require('../../service/photoManager');
 const md5 = require('md5');
 
 const router = new Router({
@@ -42,8 +42,20 @@ router
   .get('/:id/getImage/:name', async (ctx, next) => {
     const { id, name } = ctx.params;
     const image = getImage(id, name);
-    ctx.body = image;
-    ctx.type = 'image/jpeg';
+    if (image) {
+      ctx.body = image;
+      ctx.type = 'image/jpeg';
+    } else {
+      ctx.body = 'not found';
+      ctx.status = 404;
+    }
+  });
+
+router
+  .get('/:id/removeImage/:name', async (ctx, next) => {
+    const { id, name } = ctx.params;
+    removeImage(id, name);
+    ctx.body = "remove success!";
   });
 
 module.exports = router;
