@@ -1,18 +1,16 @@
 const Router = require('koa-router');
 const { getImage } = require('../../utils/fetch');
 const { calcAccessKey } = require('../../utils');
-const { fetchSaveImage } = require('../../service/novelai');
+const { fetchSaveImage, getAccessToken } = require('../../service/novelai');
 
 const router = new Router({
   prefix: '/novelai',
 });
 
 router
-  .get('/get', async (ctx, next) => {
-    const email = process.env['EMAIL'];
-    const password = process.env['PASSWORD'];
-    const key = await calcAccessKey(email, password);
-    ctx.body = JSON.stringify({ key });
+  .get('/getToken', async (ctx, next) => {
+    const result = await getAccessToken()
+    ctx.body = JSON.stringify(result);
   });
 
 router

@@ -1,7 +1,8 @@
 const request = require('request');
 
-function getImage({ accessToken, input, seed }) {
+function getImage({ accessToken, input, seed }, retry = 3) {
   return new Promise((resolve, reject) => {
+    // console.log("getImage", accessToken, input, seed);
     const body = JSON.stringify({
       input,
       model: "safe-diffusion",
@@ -32,7 +33,12 @@ function getImage({ accessToken, input, seed }) {
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
         "authorization": "Bearer " + accessToken,
       },
-    }, (err, res, body) => {
+    }, async (err, res, body) => {
+      if (err && retry > 0) {
+        resolve(getImage({ accessToken, input, seed }, retry - 1));
+      } else if (err) {
+        resolve({ error: true })
+      }
       if (body && body.slice) {
         resolve(Buffer.from(body.slice(27), 'base64').toString('binary'));
       }
@@ -40,6 +46,30 @@ function getImage({ accessToken, input, seed }) {
   });
 }
 
+function getToken(key) {
+  return new Promise((resolve) => {
+    request.post("https://api.novelai.net/user/login", {
+      body: JSON.stringify({
+        key,
+      }),
+      family: 6, // 重要，ipv4服务器非常慢
+      headers: {
+        "content-type": "application/json",
+      },
+    }, (err, res, body) => {
+      try {
+        const result = JSON.parse(body)
+        resolve(result);
+      } catch (err) {
+        resolve({
+          error: true,
+        })
+      }
+    })
+  })
+}
+
 module.exports = {
   getImage,
+  getToken,
 };
